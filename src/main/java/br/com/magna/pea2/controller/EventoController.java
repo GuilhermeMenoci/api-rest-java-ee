@@ -25,61 +25,62 @@ public class EventoController {
 	@Inject
 	private EventoService eventoService;
 
-	// Adicionando eventos
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
-	public Response salvar(EventoModel evento) {
+	public Response createEvento(EventoModel evento) {
 		try {
-			eventoService.salvarEventoDao(evento);
+			eventoService.createEventoDto(evento);
 			return Response.ok().build();
-		} catch (NotFoundException ex) {
+		} catch (IllegalArgumentException ex) {
+			ex.getMessage();
+			return Response.noContent().build();
+		} catch (Exception ex) {
 			ex.getMessage();
 			return Response.noContent().build();
 		}
 	}
 
-	// Listando todos os eventos
 	@GET
-	// Utilizada para informar qual o formato/MediaType (XML, JSON, TEXT etc...)
-	// será devolvido ao cliente (GET)
 	@Produces(MediaType.APPLICATION_JSON)
-	public List<EventoDto> listarTodos() {
+	public List<EventoDto> listAllEventos() {
 		try {
-			return eventoService.listarEventos();
+			return eventoService.listEvent();
 		} catch (NotFoundException ex) {
 			ex.getMessage();
-			return eventoService.listarEventos();
+		} catch (Exception ex) {
+			ex.getMessage();
 		}
+		return null;
 	}
 
-	// Listando evento por Codigo
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	@Path("/{codigo}")
-	public EventoDto buscarCodigo(@PathParam("codigo") Long codigo) {
+	public EventoDto listCodigo(@PathParam("codigo") Long codigo) {
 		try {
-			return eventoService.buscarCodigo(codigo);
-		} catch(NotFoundException ex) {
+			return eventoService.getCodigo(codigo);
+		} catch (NotFoundException ex) {
 			ex.getMessage();
-			return eventoService.buscarCodigo(codigo);
+			return eventoService.getCodigo(codigo);
+		} catch(Exception ex) {
+			ex.getMessage();
+			return null;
 		}
-		
 	}
-	
+
 //	@PUT
 //	@Transactional
 //	@Path("/{codigo}")
 //	@Consumes(MediaType.APPLICATION_JSON)
-//	//@Produces(MediaType.APPLICATION_JSON)
+//	@Produces(MediaType.APPLICATION_JSON)
 //	public Response atualizar(@PathParam("codigo") Long codigo, EventoDto eventoDto) {
 //		try {
-//			EventoDto dto = eventoService.atualizar(eventoDto, codigo);	
+//			EventoDto dto = eventoService.atualizar(eventoDto, codigo);
 //			return Response.ok(dto).build();
 //		} catch(NotFoundException ex) {
 //			ex.getMessage();
 //			return Response.noContent().build();
-//		}
-//		
+//		}	
 //	}
 
 	@DELETE
@@ -87,29 +88,22 @@ public class EventoController {
 	@Path("/{codigo}")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response deletar(@PathParam("codigo") Long codigo) {
+	public Response deleteEvento(@PathParam("codigo") Long codigo) {
 		try {
-			eventoService.deletar(codigo);
+			eventoService.delete(codigo);
 			return Response.ok().build();
-		} catch(NotFoundException ex) {
+		} catch (NotFoundException ex) {
 			ex.getMessage();
 			return Response.noContent().build();
-		}	
+		} catch(Exception ex) {
+			ex.getMessage();
+			return Response.noContent().build();
+		}
 	}
 
-
-//	@GET
 //	//Qual o formato/MediaType que será utilizado para enviar os dados para o servidor
 //	//@Consumes(MediaType.APPLICATION_JSON)
 //	//Utilizada para informar qual o formato/MediaType (XML, JSON, TEXT etc...) será devolvido ao cliente (GET)
 //	@Produces(MediaType.APPLICATION_JSON)
-//	public List<EventoDto> listarTodos(){
-//		try {
-//			return eventoService.listarEventos();
-//		} catch(NotFoundException ex) {
-//			ex.getMessage();
-//			return null;
-//		}
-//	}
 
 }

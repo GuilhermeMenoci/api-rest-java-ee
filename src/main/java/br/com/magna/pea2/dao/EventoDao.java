@@ -14,29 +14,39 @@ public class EventoDao {
 	@PersistenceContext(unitName = "PostgresqlDS")
 	private EntityManager em;
 	
-	public EventoModel salvar(EventoModel evento) {
+	public EventoModel create(EventoModel evento) {
 		em.persist(evento);
 		return evento;
 	}
 	
-	public List<EventoModel> listar(){
+	public List<EventoModel> list(){
 		return em.createQuery(
 				"SELECT e FROM EventoModel e", EventoModel.class)
 				.getResultList();
 	}
 	
-	public EventoModel pegarCodigo(Long codigo) {
+	public EventoModel getCodigo(Long codigo) {
 		return em.createQuery(
 				"SELECT e FROM EventoModel e WHERE e.codigo = :codigo", EventoModel.class)
 				.setParameter("codigo", codigo).getSingleResult();
 	}
 	
-//	public EventoModel atualizar(EventoModel model) {
-//		model = em.find(EventoModel.class, model.getId());
-//		return em.merge(model);
+	public Boolean existsCodigo(Long codigo) {
+		 EventoModel result = em.createQuery(
+				"SELECT e FROM EventoModel e WHERE e.codigo = :codigo", EventoModel.class)
+				.setParameter("codigo", codigo).getSingleResult();
+		 return true;
+	}
+	
+//	public EventoModel atualizar(EventoModel evento) {
+//		em.getTransaction().begin();
+//		evento = em.find(EventoModel.class, evento.getId());
+//		EventoModel eventoAtualizado = em.merge(evento);
+//		em.getTransaction().commit();
+//		return eventoAtualizado;
 //	}
 	
-	public void deletar(EventoModel evento) {
+	public void delete(EventoModel evento) {
 		evento = em.find(EventoModel.class, evento.getId());
 		em.remove(evento);
 	}
