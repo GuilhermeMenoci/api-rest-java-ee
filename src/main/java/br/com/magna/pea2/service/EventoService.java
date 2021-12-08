@@ -49,17 +49,17 @@ public class EventoService {
 			logger.info("Evento cadastrado com sucesso");
 			return eventoSalvo;
 		} catch (IllegalArgumentException ex) {
-			logger.error(ex.getMessage());
+			logger.error("Erro, não foi possivel cadastrar evento");
+			throw ex;
 		}
-		return null;
 	}
 
-	// Verificando se o evento já tem um cadastro
-	public Boolean verificaEvento(EventoModel codigoEvento) {
-		Boolean verificaEvento = false;
-		verificaEvento = eventoDao.existsCodigo(codigoEvento.getCodigo());
-		return verificaEvento;
-	}
+//	// Verificando se o evento já tem um cadastro
+//	public Boolean verificaEvento(EventoModel codigoEvento) {
+//		Boolean verificaEvento = false;
+//		verificaEvento = eventoDao.existsCodigo(codigoEvento.getCodigo());
+//		return verificaEvento;
+//	}
 
 	// Listando todos os eventos
 	public List<EventoDto> listEvent() throws NotFoundException {
@@ -73,7 +73,7 @@ public class EventoService {
 			return eventos;
 		} catch (NotFoundException ex) {
 			logger.error(ex.getMessage());
-			return null;
+			throw ex;
 		}
 	}
 
@@ -83,32 +83,43 @@ public class EventoService {
 			EventoDto eventoDto = new EventoDto();
 			EventoModel eventoModel = eventoDao.getCodigo(codigo);
 			eventoDto = modelMapper.map(eventoModel, EventoDto.class);
-			logger.info("Evento com código: " + codigo);
+			logger.info("Evento com código: " + codigo + " listado");
 			return eventoDto;
 		} catch (NotFoundException ex) {
-			logger.error("Não existe esse evento com código: " + codigo);
-			return null;
+			logger.error("Não existe esse evento com código: " + "'" + codigo + "'");
+			throw ex;
 		}
 	}
-
-//	public EventoDto atualizar(EventoDto eventoDto, Long codigo) {
-//		EventoModel evento = eventoDao.pegarCodigo(codigo);
-//		EventoDto eventoDtoAntigo = convertDto(evento);
-//		eventoDto = eventoDtoAntigo;
-//		EventoModel convertModel = convertModel(eventoDto);
-//		convertModel.setId(evento.getId());
-//		EventoModel eventoAtualizado = eventoDao.salvar(convertModel);
-//		return convertDto(eventoAtualizado);
-//	}
+	
+	//Atualizando evento
+	public EventoDto update(Long codigo, EventoDto eventoDto) throws Exception {
+		try {
+//			if (!this.eventoDao.getCodigo(eventoDto.getCodigo())) {
+//				throw new NotFoundException("The cpf refered does not match with any client");
+//			}
+			EventoModel model = eventoDao.getCodigo(codigo);
+			model.setCodigo(eventoDto.getCodigo());
+			model.setCidade(eventoDto.getCidade());
+			model.setNomeEvento(eventoDto.getNomeEvento());
+			model.setData(eventoDto.getData());
+			eventoDao.atualizar(model);
+			EventoDto dto = modelMapper.map(model, EventoDto.class);
+			logger.info("Evento com código: " + codigo + " atualizado");
+			return dto;
+		} catch (Exception ex) {
+			logger.error("Não existe esse evento com código: " + "'" + codigo + "'");
+			throw ex;
+		}
+	}
 
 	// Deletando evento por Codigo
 	public void delete(Long codigo) throws NotFoundException {
 		try {
 			EventoModel model = eventoDao.getCodigo(codigo);
 			eventoDao.delete(model);
-			logger.info("Evento com código: " + codigo + " deletado");
+			logger.info("Evento com código: " + "'" +codigo + "'" + " deletado");
 		} catch (NotFoundException ex) {
-			logger.error(ex.getMessage());
+			logger.error("Evento não encontrado/deletado");
 		}
 	}
 

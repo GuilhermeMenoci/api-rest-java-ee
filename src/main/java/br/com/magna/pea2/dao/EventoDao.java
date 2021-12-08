@@ -31,20 +31,17 @@ public class EventoDao {
 				.setParameter("codigo", codigo).getSingleResult();
 	}
 	
-	public Boolean existsCodigo(Long codigo) {
-		 EventoModel result = em.createQuery(
-				"SELECT e FROM EventoModel e WHERE e.codigo = :codigo", EventoModel.class)
-				.setParameter("codigo", codigo).getSingleResult();
-		 return true;
-	}
-	
-//	public EventoModel atualizar(EventoModel evento) {
-//		em.getTransaction().begin();
-//		evento = em.find(EventoModel.class, evento.getId());
-//		EventoModel eventoAtualizado = em.merge(evento);
-//		em.getTransaction().commit();
-//		return eventoAtualizado;
+//	public Boolean existsCodigo(Long codigo) {
+//		 EventoModel result = em.createQuery(
+//				"SELECT e FROM EventoModel e WHERE e.codigo = :codigo", EventoModel.class)
+//				.setParameter("codigo", codigo).getSingleResult();
+//		 return true;
 //	}
+	
+	public EventoModel atualizar(EventoModel evento) {
+		evento = em.find(EventoModel.class, evento.getId());
+		return em.merge(evento);
+	}
 	
 	public void delete(EventoModel evento) {
 		evento = em.find(EventoModel.class, evento.getId());

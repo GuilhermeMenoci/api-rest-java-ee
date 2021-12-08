@@ -14,24 +14,29 @@ public class ConvidadoDao {
 	@PersistenceContext(unitName = "PostgresqlDS")
 	private EntityManager em;
 	
-	public ConvidadoModel salvar(ConvidadoModel convidado) {
+	public ConvidadoModel create(ConvidadoModel convidado) {
 		em.persist(convidado);
 		return convidado;
 	}
 	
-	public List<ConvidadoModel> listar(){
+	public List<ConvidadoModel> list(){
 		return em.createQuery(
 				"SELECT c FROM ConvidadoModel c", ConvidadoModel.class)
 				.getResultList();
 	}
 	
-	public ConvidadoModel pegarCpf(String cpf) {
+	public ConvidadoModel getCpf(String cpf) {
 		return em.createQuery(
 				"SELECT c FROM ConvidadoModel c WHERE c.cpf = :cpf", ConvidadoModel.class)
 				.setParameter("cpf", cpf).getSingleResult();
 	}
 	
-	public void deletar(ConvidadoModel convidado) {
+	public ConvidadoModel update(ConvidadoModel convidado) {
+		convidado = em.find(ConvidadoModel.class, convidado.getId());
+		return em.merge(convidado);
+	}
+	
+	public void delete(ConvidadoModel convidado) {
 		convidado = em.find(ConvidadoModel.class, convidado.getId());
 		em.remove(convidado);
 	}

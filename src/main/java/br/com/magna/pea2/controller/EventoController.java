@@ -9,6 +9,7 @@ import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.NotFoundException;
 import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
@@ -68,20 +69,23 @@ public class EventoController {
 		}
 	}
 
-//	@PUT
-//	@Transactional
-//	@Path("/{codigo}")
-//	@Consumes(MediaType.APPLICATION_JSON)
-//	@Produces(MediaType.APPLICATION_JSON)
-//	public Response atualizar(@PathParam("codigo") Long codigo, EventoDto eventoDto) {
-//		try {
-//			EventoDto dto = eventoService.atualizar(eventoDto, codigo);
-//			return Response.ok(dto).build();
-//		} catch(NotFoundException ex) {
-//			ex.getMessage();
-//			return Response.noContent().build();
-//		}	
-//	}
+	@PUT
+	@Transactional
+	@Path("/{codigo}")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response update(@PathParam("codigo") Long codigo, EventoDto eventoDto) {
+		try {
+			EventoDto dto = eventoService.update(codigo, eventoDto);
+			return Response.ok(dto).build();
+		} catch(NotFoundException ex) {
+			ex.getMessage();
+			return Response.noContent().build();
+		} catch(Exception ex) {
+			ex.getMessage();
+			return Response.noContent().build();
+		}
+	}
 
 	@DELETE
 	@Transactional

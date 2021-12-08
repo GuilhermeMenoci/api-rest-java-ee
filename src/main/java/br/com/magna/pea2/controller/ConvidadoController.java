@@ -9,6 +9,7 @@ import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.NotFoundException;
 import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
@@ -28,9 +29,9 @@ public class ConvidadoController {
 	// Adicionando convidados
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
-	public Response salvar(ConvidadoModel convidado) {
+	public Response createConvidado(ConvidadoModel convidado) {
 		try {
-			convidadoService.salvarConvidadoDao(convidado);
+			convidadoService.createGuestsDto(convidado);
 			return Response.ok().build();
 		} catch (NotFoundException ex) {
 			ex.getMessage();
@@ -41,12 +42,12 @@ public class ConvidadoController {
 	// Listando todos os convidados
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
-	public List<ConvidadoDto> listarTodos() {
+	public List<ConvidadoDto> listAllGuests() {
 		try {
-			return convidadoService.listarConvidados();
+			return convidadoService.listGuests();
 		} catch (NotFoundException ex) {
 			ex.getMessage();
-			return convidadoService.listarConvidados();
+			return convidadoService.listGuests();
 		}
 	}
 	
@@ -54,13 +55,31 @@ public class ConvidadoController {
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	@Path("/{cpf}")
-	public ConvidadoDto buscarCpf(@PathParam("cpf") String cpf) {
+	public ConvidadoDto listCpf(@PathParam("cpf") String cpf) {
 		try {
-			return convidadoService.buscarCpf(cpf);
+			return convidadoService.getCpf(cpf);
 		} catch(NotFoundException ex) {
 			ex.getMessage();
-			return convidadoService.buscarCpf(cpf);
+			return convidadoService.getCpf(cpf);
 		}	
+	}
+	
+	@PUT
+	@Transactional
+	@Path("/{cpf}")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response update(@PathParam("cpf") String cpf, ConvidadoDto convidadoDto) {
+		try {
+			ConvidadoDto dto = convidadoService.update(cpf, convidadoDto);
+			return Response.ok(dto).build();
+		} catch(NotFoundException ex) {
+			ex.getMessage();
+			return Response.noContent().build();
+		} catch(Exception ex) {
+			ex.getMessage();
+			return Response.noContent().build();
+		}
 	}
 	
 	//Deletando convidado por CPF
@@ -69,9 +88,9 @@ public class ConvidadoController {
 	@Path("/{cpf}")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response deletar(@PathParam("cpf") String cpf) {
+	public Response delete(@PathParam("cpf") String cpf) {
 		try {
-			convidadoService.deletar(cpf);
+			convidadoService.delete(cpf);
 			return Response.ok().build();
 		} catch(NotFoundException ex) {
 			ex.getMessage();

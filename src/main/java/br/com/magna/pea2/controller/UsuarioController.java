@@ -3,12 +3,14 @@ package br.com.magna.pea2.controller;
 import java.util.List;
 
 import javax.inject.Inject;
+import javax.persistence.EntityNotFoundException;
 import javax.transaction.Transactional;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.NotFoundException;
 import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
@@ -25,43 +27,70 @@ public class UsuarioController {
 	@Inject
 	private UsuarioService usuarioService;
 	
-	//Adicionando usuario
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
-	public Response salvar(UsuarioModel usuario) {
+	public Response createUser(UsuarioModel usuario) {
 		try {
-			usuarioService.salvarUsuarioDao(usuario);
+			usuarioService.createUserDto(usuario);
 			return Response.ok().build();
 		} catch(NotFoundException ex) {
 			ex.getMessage();
 			return Response.noContent().build();
+		} catch(IllegalArgumentException ex) {
+			ex.getMessage();
+			return Response.noContent().build();
+		} catch(Exception ex) {
+			ex.getMessage();
+			return null;
 		}
 	}
 	
 	// Listando todos os usuarios
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
-	public List<UsuarioDto> listarTodos() {
+	public List<UsuarioDto> listAllUser() {
 		try {
-			return usuarioService.listarUsuarios();
+			return usuarioService.listUser();
 		} catch (NotFoundException ex) {
 			ex.getMessage();
-			return usuarioService.listarUsuarios();
+		} catch(Exception ex) {
+			ex.getMessage();
 		}
+		return null;
 	}
 	
-	// Listando usuario por Login
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	@Path("/{login}")
-	public UsuarioDto buscarLogin(@PathParam("login") String login) {
+	public UsuarioDto listLogin(@PathParam("login") String login) {
 		try {
-			return usuarioService.buscarLogin(login);
+			return usuarioService.getLogin(login);
 		} catch(NotFoundException ex) {
 			ex.getMessage();
-			return usuarioService.buscarLogin(login);
+		} catch(EntityNotFoundException ex) {
+			ex.getMessage();
+		} catch(Exception ex) {
+			ex.getMessage();
 		}
-		
+		return null;
+	}
+	
+	@PUT
+	@Transactional
+	@Path("/{login}")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response update(@PathParam("login") String login, UsuarioDto usuarioDto) {
+		try {
+			UsuarioDto dto = usuarioService.update(login, usuarioDto);
+			return Response.ok(dto).build();
+		} catch(NotFoundException ex) {
+			ex.getMessage();
+			return Response.noContent().build();
+		} catch(Exception ex) {
+			ex.getMessage();
+			return Response.noContent().build();
+		}
 	}
 	
 	//Deletando usuario por Login
@@ -70,14 +99,17 @@ public class UsuarioController {
 	@Path("/{login}")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response deletar(@PathParam("login") String login) {
+	public Response delete(@PathParam("login") String login) {
 		try {
-			usuarioService.deletar(login);
+			usuarioService.delete(login);
 			return Response.ok().build();
 		} catch(NotFoundException ex) {
 			ex.getMessage();
 			return Response.noContent().build();
-		}	
+		} catch(Exception ex) {
+			ex.getMessage();
+			return Response.noContent().build();
+		}
 	}
 	
 	

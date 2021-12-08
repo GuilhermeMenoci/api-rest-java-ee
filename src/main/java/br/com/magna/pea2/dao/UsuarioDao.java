@@ -14,24 +14,29 @@ public class UsuarioDao {
 	@PersistenceContext(unitName = "PostgresqlDS")
 	private EntityManager em;
 	
-	public UsuarioModel salvar(UsuarioModel usuario) {
+	public UsuarioModel create(UsuarioModel usuario) {
 		em.persist(usuario);
 		return usuario;
 	}
 	
-	public List<UsuarioModel> listar(){
+	public List<UsuarioModel> list(){
 		return em.createQuery(
 				"SELECT u FROM UsuarioModel u", UsuarioModel.class)
 				.getResultList();
 	}
 	
-	public UsuarioModel pegarLogin(String login) {
+	public UsuarioModel getLogin(String login) {
 		return em.createQuery(
 				"SELECT u FROM UsuarioModel u WHERE u.login = :login", UsuarioModel.class)
 				.setParameter("login", login).getSingleResult();
 	}
 	
-	public void deletar(UsuarioModel usuario) {
+	public UsuarioModel update(UsuarioModel usuario) {
+		usuario = em.find(UsuarioModel.class, usuario.getId());
+		return em.merge(usuario);
+	}
+	
+	public void delete(UsuarioModel usuario) {
 		usuario = em.find(UsuarioModel.class, usuario.getId());
 		em.remove(usuario);
 	}
