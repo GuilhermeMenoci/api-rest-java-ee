@@ -26,7 +26,6 @@ public class ConvidadoController {
 	@Inject
 	private ConvidadoService convidadoService;
 
-	// Adicionando convidados
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
 	public Response createConvidado(ConvidadoModel convidado) {
@@ -39,7 +38,6 @@ public class ConvidadoController {
 		}
 	}
 
-	// Listando todos os convidados
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	public List<ConvidadoDto> listAllGuests() {
@@ -47,11 +45,12 @@ public class ConvidadoController {
 			return convidadoService.listGuests();
 		} catch (NotFoundException ex) {
 			ex.getMessage();
-			return convidadoService.listGuests();
+		} catch(Exception ex) {
+			ex.getMessage();
 		}
+		return null;
 	}
 	
-	// Listando convidado por CPF
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	@Path("/{cpf}")
@@ -60,8 +59,10 @@ public class ConvidadoController {
 			return convidadoService.getCpf(cpf);
 		} catch(NotFoundException ex) {
 			ex.getMessage();
-			return convidadoService.getCpf(cpf);
-		}	
+		} catch(Exception ex) {
+			ex.getMessage();
+		}
+		return null;
 	}
 	
 	@PUT
@@ -82,7 +83,6 @@ public class ConvidadoController {
 		}
 	}
 	
-	//Deletando convidado por CPF
 	@DELETE
 	@Transactional
 	@Path("/{cpf}")
@@ -95,7 +95,10 @@ public class ConvidadoController {
 		} catch(NotFoundException ex) {
 			ex.getMessage();
 			return Response.noContent().build();
-		}	
+		} catch(Exception ex) {
+			ex.getMessage();
+			return Response.noContent().build();
+		}
 	}
 
 }

@@ -17,7 +17,6 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import br.com.magna.pea2.dto.EventoDto;
-import br.com.magna.pea2.model.EventoModel;
 import br.com.magna.pea2.service.EventoService;
 
 @Path("/eventos")
@@ -26,9 +25,24 @@ public class EventoController {
 	@Inject
 	private EventoService eventoService;
 
+//	@POST
+//	@Consumes(MediaType.APPLICATION_JSON)
+//	public Response createEvento(EventoModel evento) {
+//		try {
+//			eventoService.createEventoDto(evento);
+//			return Response.ok().build();
+//		} catch (IllegalArgumentException ex) {
+//			ex.getMessage();
+//			return Response.noContent().build();
+//		} catch (Exception ex) {
+//			ex.getMessage();
+//			return Response.noContent().build();
+//		}
+//	}
+	
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
-	public Response createEvento(EventoModel evento) {
+	public Response createEvento(EventoDto evento) {
 		try {
 			eventoService.createEventoDto(evento);
 			return Response.ok().build();

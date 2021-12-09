@@ -94,7 +94,7 @@ public class UsuarioService {
 			usuarioDao.delete(model);
 			logger.info("Usuario com login: " + "'" + login + "'" + " deletado");
 		} catch(Exception ex) {
-			logger.error("Usuario não encontrado/deletado");
+			logger.error("Usuario não deletado/encontrado");
 		}
 	}
 	

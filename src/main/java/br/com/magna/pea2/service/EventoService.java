@@ -28,38 +28,27 @@ public class EventoService {
 //	// Cadastrando um evento
 //	public EventoModel createEventoDto(EventoModel evento) throws IllegalArgumentException {
 //		try {
-//			if (verificaEvento(evento)) {
-//				System.out.println("evento já cadastrado");
-//			} else {
-//				EventoModel eventoSalvo = eventoDao.create(evento);
-//				return eventoSalvo;
-//			}
+//			EventoModel eventoSalvo = eventoDao.create(evento);
+//			logger.info("Evento cadastrado com sucesso");
+//			return eventoSalvo;
 //		} catch (IllegalArgumentException ex) {
-//			ex.getMessage();
-//		} catch(NotFoundException ex) {
-//			ex.getMessage();
+//			logger.error("Erro, não foi possivel cadastrar evento");
+//			throw ex;
 //		}
-//		return null;
 //	}
-
+	
 	// Cadastrando um evento
-	public EventoModel createEventoDto(EventoModel evento) throws IllegalArgumentException {
-		try {
-			EventoModel eventoSalvo = eventoDao.create(evento);
-			logger.info("Evento cadastrado com sucesso");
-			return eventoSalvo;
-		} catch (IllegalArgumentException ex) {
-			logger.error("Erro, não foi possivel cadastrar evento");
-			throw ex;
+		public EventoDto createEventoDto(EventoDto evento) throws IllegalArgumentException {
+			try {
+				EventoModel model = modelMapper.map(evento, EventoModel.class);
+				EventoModel eventoSalvo = eventoDao.create(model);
+				logger.info("Evento cadastrado com sucesso");
+				return modelMapper.map(eventoSalvo, EventoDto.class);
+			} catch (IllegalArgumentException ex) {
+				logger.error("Erro, não foi possivel cadastrar evento");
+				throw ex;
+			}
 		}
-	}
-
-//	// Verificando se o evento já tem um cadastro
-//	public Boolean verificaEvento(EventoModel codigoEvento) {
-//		Boolean verificaEvento = false;
-//		verificaEvento = eventoDao.existsCodigo(codigoEvento.getCodigo());
-//		return verificaEvento;
-//	}
 
 	// Listando todos os eventos
 	public List<EventoDto> listEvent() throws NotFoundException {
