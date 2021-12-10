@@ -5,6 +5,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 import javax.inject.Named;
+import javax.persistence.EntityNotFoundException;
 import javax.ws.rs.NotFoundException;
 
 import org.modelmapper.ModelMapper;
@@ -24,18 +25,6 @@ public class EventoService {
 	private EventoDao eventoDao;
 
 	private ModelMapper modelMapper = new ModelMapper();
-
-//	// Cadastrando um evento
-//	public EventoModel createEventoDto(EventoModel evento) throws IllegalArgumentException {
-//		try {
-//			EventoModel eventoSalvo = eventoDao.create(evento);
-//			logger.info("Evento cadastrado com sucesso");
-//			return eventoSalvo;
-//		} catch (IllegalArgumentException ex) {
-//			logger.error("Erro, não foi possivel cadastrar evento");
-//			throw ex;
-//		}
-//	}
 	
 	// Cadastrando um evento
 		public EventoDto createEventoDto(EventoDto evento) throws IllegalArgumentException {
@@ -77,24 +66,32 @@ public class EventoService {
 		} catch (NotFoundException ex) {
 			logger.error("Não existe esse evento com código: " + "'" + codigo + "'");
 			throw ex;
+		} catch(Exception ex) {
+			logger.error("Não existe esse vento com código: " + "'" + codigo + "'");
+			throw ex;
 		}
 	}
 	
 	//Atualizando evento
-	public EventoDto update(Long codigo, EventoDto eventoDto) throws Exception {
+	public EventoDto update(Long codigo, EventoDto eventoDto) throws EntityNotFoundException {
 		try {
-//			if (!this.eventoDao.getCodigo(eventoDto.getCodigo())) {
-//				throw new NotFoundException("The cpf refered does not match with any client");
-//			}
-			EventoModel model = eventoDao.getCodigo(codigo);
-			model.setCodigo(eventoDto.getCodigo());
-			model.setCidade(eventoDto.getCidade());
-			model.setNomeEvento(eventoDto.getNomeEvento());
-			model.setData(eventoDto.getData());
-			eventoDao.atualizar(model);
-			EventoDto dto = modelMapper.map(model, EventoDto.class);
-			logger.info("Evento com código: " + codigo + " atualizado");
-			return dto;
+			if(codigo == null) {
+				EventoModel model = eventoDao.getCodigo(codigo);
+				model.setCodigo(eventoDto.getCodigo());
+				model.setCidade(eventoDto.getCidade());
+				model.setNomeEvento(eventoDto.getNomeEvento());
+				model.setData(eventoDto.getData());
+				eventoDao.atualizar(model);
+				EventoDto dto = modelMapper.map(model, EventoDto.class);
+				logger.info("Evento com código: " + codigo + " atualizado");
+				return dto;
+			} else {
+				logger.info("Evento com código: " + codigo + " não encontrado");
+				return eventoDto;
+			}
+		} catch (EntityNotFoundException ex) {
+			logger.error("Não existe esse convidado com CPF: " + "'" + codigo + "'");
+			throw ex;
 		} catch (Exception ex) {
 			logger.error("Não existe esse evento com código: " + "'" + codigo + "'");
 			throw ex;
@@ -109,15 +106,9 @@ public class EventoService {
 			logger.info("Evento com código: " + "'" +codigo + "'" + " deletado");
 		} catch (NotFoundException ex) {
 			logger.error("Evento não encontrado/deletado");
+		} catch(Exception ex) {
+			logger.error("Evento não encontrado/deletado");
 		}
-	}
-
-	public EventoModel convertModel(EventoDto eventoDto) {
-		return modelMapper.map(eventoDto, EventoModel.class);
-	}
-
-	public EventoDto convertDto(EventoModel eventoModel) {
-		return modelMapper.map(eventoModel, EventoDto.class);
 	}
 
 }

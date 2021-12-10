@@ -70,18 +70,23 @@ public class UsuarioService {
 	//Atualizando usuario
 	public UsuarioDto update(String login, UsuarioDto usuarioDto) throws EntityNotFoundException {
 		try {
-//			if (!this.eventoDao.getCodigo(eventoDto.getCodigo())) {
-//				throw new NotFoundException("The cpf refered does not match with any client");
-//			}
-			UsuarioModel model = usuarioDao.getLogin(login);
-			model.setLogin(usuarioDto.getLogin());
-			model.setSenha(usuarioDto.getSenha());
-			model.setEvento(usuarioDto.getEvento());
-			usuarioDao.update(model);
-			UsuarioDto dto = modelMapper.map(model, UsuarioDto.class);
-			logger.info("Usuario com login: " + "'" + login + "'" + " atualizado");
-			return dto;
+			if(login == null) {
+				UsuarioModel model = usuarioDao.getLogin(login);
+				model.setLogin(usuarioDto.getLogin());
+				model.setSenha(usuarioDto.getSenha());
+				model.setEvento(usuarioDto.getEvento());
+				usuarioDao.update(model);
+				UsuarioDto dto = modelMapper.map(model, UsuarioDto.class);
+				logger.info("Usuario com login: " + "'" + login + "'" + " atualizado");
+				return dto;
+			} else {
+				logger.info("Usuario com login: " + "'" + login + "'" + " não encontrado");
+				return usuarioDto;
+			}	
 		} catch (EntityNotFoundException ex) {
+			logger.error("Não existe esse usuario com login: " + "'" + login + "'");
+			throw ex;
+		} catch (Exception ex) {
 			logger.error("Não existe esse usuario com login: " + "'" + login + "'");
 			throw ex;
 		}

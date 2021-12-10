@@ -24,21 +24,6 @@ public class EventoController {
 
 	@Inject
 	private EventoService eventoService;
-
-//	@POST
-//	@Consumes(MediaType.APPLICATION_JSON)
-//	public Response createEvento(EventoModel evento) {
-//		try {
-//			eventoService.createEventoDto(evento);
-//			return Response.ok().build();
-//		} catch (IllegalArgumentException ex) {
-//			ex.getMessage();
-//			return Response.noContent().build();
-//		} catch (Exception ex) {
-//			ex.getMessage();
-//			return Response.noContent().build();
-//		}
-//	}
 	
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
@@ -118,10 +103,5 @@ public class EventoController {
 			return Response.noContent().build();
 		}
 	}
-
-//	//Qual o formato/MediaType que será utilizado para enviar os dados para o servidor
-//	//@Consumes(MediaType.APPLICATION_JSON)
-//	//Utilizada para informar qual o formato/MediaType (XML, JSON, TEXT etc...) será devolvido ao cliente (GET)
-//	@Produces(MediaType.APPLICATION_JSON)
 
 }

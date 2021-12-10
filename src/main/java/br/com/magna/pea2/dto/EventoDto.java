@@ -1,8 +1,12 @@
 package br.com.magna.pea2.dto;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 
-public class EventoDto {
+public class EventoDto implements Serializable{
+
+	private static final long serialVersionUID = 1L;
+	
 	private Long codigo;
 	private String nomeEvento;
 	private LocalDate data = LocalDate.now();

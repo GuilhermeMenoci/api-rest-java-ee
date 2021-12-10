@@ -1,10 +1,13 @@
 package br.com.magna.pea2.dto;
 
+import java.io.Serializable;
 import java.util.Objects;
 
 import br.com.magna.pea2.model.EventoModel;
 
-public class UsuarioDto {
+public class UsuarioDto implements Serializable{
+
+	private static final long serialVersionUID = 1L;
 	
 	private String login;
 	private String senha;
