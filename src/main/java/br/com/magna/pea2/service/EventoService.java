@@ -20,24 +20,24 @@ import br.com.magna.pea2.model.EventoModel;
 public class EventoService {
 
 	private static Logger logger = LoggerFactory.getLogger(EventoService.class);
-	
+
 	@Inject
 	private EventoDao eventoDao;
 
 	private ModelMapper modelMapper = new ModelMapper();
-	
+
 	// Cadastrando um evento
-		public EventoDto createEventoDto(EventoDto evento) throws IllegalArgumentException {
-			try {
-				EventoModel model = modelMapper.map(evento, EventoModel.class);
-				EventoModel eventoSalvo = eventoDao.create(model);
-				logger.info("Evento cadastrado com sucesso");
-				return modelMapper.map(eventoSalvo, EventoDto.class);
-			} catch (IllegalArgumentException ex) {
-				logger.error("Erro, não foi possivel cadastrar evento");
-				throw ex;
-			}
+	public EventoDto createEventoDto(EventoDto evento) throws IllegalArgumentException {
+		try {
+			EventoModel model = modelMapper.map(evento, EventoModel.class);
+			EventoModel eventoSalvo = eventoDao.create(model);
+			logger.info("Evento cadastrado com sucesso");
+			return modelMapper.map(eventoSalvo, EventoDto.class);
+		} catch (IllegalArgumentException ex) {
+			logger.error("Erro, não foi possivel cadastrar evento");
+			throw ex;
 		}
+	}
 
 	// Listando todos os eventos
 	public List<EventoDto> listEvent() throws NotFoundException {
@@ -66,29 +66,24 @@ public class EventoService {
 		} catch (NotFoundException ex) {
 			logger.error("Não existe esse evento com código: " + "'" + codigo + "'");
 			throw ex;
-		} catch(Exception ex) {
+		} catch (Exception ex) {
 			logger.error("Não existe esse vento com código: " + "'" + codigo + "'");
 			throw ex;
 		}
 	}
-	
-	//Atualizando evento
+
+	// Atualizando evento
 	public EventoDto update(Long codigo, EventoDto eventoDto) throws EntityNotFoundException {
 		try {
-			if(codigo == null) {
-				EventoModel model = eventoDao.getCodigo(codigo);
-				model.setCodigo(eventoDto.getCodigo());
-				model.setCidade(eventoDto.getCidade());
-				model.setNomeEvento(eventoDto.getNomeEvento());
-				model.setData(eventoDto.getData());
-				eventoDao.atualizar(model);
-				EventoDto dto = modelMapper.map(model, EventoDto.class);
-				logger.info("Evento com código: " + codigo + " atualizado");
-				return dto;
-			} else {
-				logger.info("Evento com código: " + codigo + " não encontrado");
-				return eventoDto;
-			}
+			EventoModel model = eventoDao.getCodigo(codigo);
+			model.setCodigo(eventoDto.getCodigo());
+			model.setCidade(eventoDto.getCidade());
+			model.setNomeEvento(eventoDto.getNomeEvento());
+			model.setData(eventoDto.getData());
+			eventoDao.update(model);
+			EventoDto dto = modelMapper.map(model, EventoDto.class);
+			logger.info("Evento com código: " + codigo + " atualizado");
+			return dto;
 		} catch (EntityNotFoundException ex) {
 			logger.error("Não existe esse convidado com CPF: " + "'" + codigo + "'");
 			throw ex;
@@ -103,10 +98,10 @@ public class EventoService {
 		try {
 			EventoModel model = eventoDao.getCodigo(codigo);
 			eventoDao.delete(model);
-			logger.info("Evento com código: " + "'" +codigo + "'" + " deletado");
+			logger.info("Evento com código: " + "'" + codigo + "'" + " deletado");
 		} catch (NotFoundException ex) {
 			logger.error("Evento não encontrado/deletado");
-		} catch(Exception ex) {
+		} catch (Exception ex) {
 			logger.error("Evento não encontrado/deletado");
 		}
 	}

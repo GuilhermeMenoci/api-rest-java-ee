@@ -35,6 +35,8 @@ public class ConvidadoController {
 		} catch (NotFoundException ex) {
 			ex.getMessage();
 			return Response.noContent().build();
+		} catch(Exception ex) {
+			return Response.serverError().build();
 		}
 	}
 
@@ -79,7 +81,7 @@ public class ConvidadoController {
 			return Response.noContent().build();
 		} catch(Exception ex) {
 			ex.getMessage();
-			return Response.noContent().build();
+			return Response.serverError().build();
 		}
 	}
 	
@@ -97,7 +99,7 @@ public class ConvidadoController {
 			return Response.noContent().build();
 		} catch(Exception ex) {
 			ex.getMessage();
-			return Response.noContent().build();
+			return Response.serverError().build();
 		}
 	}
 

@@ -41,7 +41,7 @@ public class UsuarioController {
 			return Response.noContent().build();
 		} catch(Exception ex) {
 			ex.getMessage();
-			return null;
+			return Response.serverError().build();
 		}
 	}
 	
@@ -89,7 +89,7 @@ public class UsuarioController {
 			return Response.noContent().build();
 		} catch(Exception ex) {
 			ex.getMessage();
-			return Response.noContent().build();
+			return Response.serverError().build();
 		}
 	}
 	
@@ -108,7 +108,7 @@ public class UsuarioController {
 			return Response.noContent().build();
 		} catch(Exception ex) {
 			ex.getMessage();
-			return Response.noContent().build();
+			return Response.serverError().build();
 		}
 	}
 	

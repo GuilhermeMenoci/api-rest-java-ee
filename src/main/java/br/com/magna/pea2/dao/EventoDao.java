@@ -28,7 +28,7 @@ public class EventoDao {
 				.setParameter("codigo", codigo).getSingleResult();
 	}
 
-	public EventoModel atualizar(EventoModel evento) {
+	public EventoModel update(EventoModel evento) {
 		evento = em.find(EventoModel.class, evento.getId());
 		return em.merge(evento);
 	}

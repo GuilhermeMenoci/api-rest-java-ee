@@ -12,6 +12,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import br.com.caelum.stella.validation.CPFValidator;
+import br.com.caelum.stella.validation.InvalidStateException;
 import br.com.magna.pea2.dao.ConvidadoDao;
 import br.com.magna.pea2.dto.ConvidadoDto;
 import br.com.magna.pea2.model.ConvidadoModel;
@@ -29,7 +30,7 @@ public class ConvidadoService {
 	// Adicionando convidados
 	public ConvidadoModel createGuestsDto(ConvidadoModel convidado) throws IllegalArgumentException {
 		try {
-			if(validCpf(convidado.getCpf())) {
+			if (validCpf(convidado.getCpf())) {
 				ConvidadoModel convidadoSalvo = convidadoDao.create(convidado);
 				logger.info("Convidado cadastrado com sucesso");
 				return convidadoSalvo;
@@ -79,7 +80,7 @@ public class ConvidadoService {
 	// Atualizando convidado
 	public ConvidadoDto update(String cpf, ConvidadoDto convidadoDto) throws EntityNotFoundException {
 		try {
-			if (cpf == null) {
+			if(validCpf(convidadoDto.getCpf())) {
 				ConvidadoModel model = convidadoDao.getCpf(cpf);
 				model.setNome(convidadoDto.getNome());
 				model.setCpf(convidadoDto.getCpf());
@@ -89,10 +90,9 @@ public class ConvidadoService {
 				logger.info("Convidado com CPF: " + "'" + cpf + "'" + " atualizado");
 				return dto;
 			} else {
-				logger.info("Convidado com CPF: " + "'" + cpf + "'" + " não encontrado");
-				return convidadoDto;
+				logger.error("CPF Inválido!");
+				return null;
 			}
-
 		} catch (EntityNotFoundException ex) {
 			logger.error("Não existe esse convidado com CPF: " + "'" + cpf + "'");
 			throw ex;
@@ -119,7 +119,7 @@ public class ConvidadoService {
 		try {
 			cpfValidator.assertValid(cpf);
 			return true;
-		} catch (Exception ex) {
+		} catch (InvalidStateException ex) {
 			ex.getMessage();
 			return false;
 		}

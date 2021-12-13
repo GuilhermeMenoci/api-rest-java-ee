@@ -36,7 +36,7 @@ public class EventoController {
 			return Response.noContent().build();
 		} catch (Exception ex) {
 			ex.getMessage();
-			return Response.noContent().build();
+			return Response.serverError().build();
 		}
 	}
 
@@ -82,7 +82,7 @@ public class EventoController {
 			return Response.noContent().build();
 		} catch(Exception ex) {
 			ex.getMessage();
-			return Response.noContent().build();
+			return Response.serverError().build();
 		}
 	}
 
@@ -100,7 +100,7 @@ public class EventoController {
 			return Response.noContent().build();
 		} catch(Exception ex) {
 			ex.getMessage();
-			return Response.noContent().build();
+			return Response.serverError().build();
 		}
 	}
 
